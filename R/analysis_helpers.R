@@ -40,6 +40,3 @@ step_backward <- function(data, model, family, k){
   rslt <- attr(fit_step$terms, "term.labels")
   return(rslt)
 }
-
-
-
