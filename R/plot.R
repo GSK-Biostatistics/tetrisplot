@@ -40,7 +40,7 @@ tetris_plot <- function(x, k = 0, ...){
                   str = paste0(round(prop*100), "%")) %>% 
     ggplot2::ggplot(ggplot2::aes(vars, prop)) +
     ggplot2::geom_col(width = .7, fill = 'gray80') +
-    ggplot2::geom_text(ggplot2::aes(label = str), hjust = -0.5, size = 10 / .pt) +
+    ggplot2::geom_text(ggplot2::aes(label = str), hjust = -0.5, size = 10 / ggplot2::.pt) +
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(.0, .8))) +
     ggplot2::theme_void() +
     ggplot2::coord_flip()

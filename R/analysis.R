@@ -82,6 +82,7 @@ analyse_univariate <- function(x,
   out
 }
 
+#' @export
 analyse_backward <- function(x, 
                              response = NULL, 
                              vars = NULL, 
@@ -128,3 +129,46 @@ analyse_backward <- function(x,
 # 
 # stepwise_both
 # 
+
+#' @export
+analyse_grlasso <- function(x, 
+                            response = NULL, 
+                            vars = NULL, 
+                            family = "gaussian",
+                            grpreg_list = list(NULL)){
+  
+  if(!any(class(x) == "tetris_analysis")){
+    mod_char <- glue::glue(response, " ~ ", paste0(vars, collapse = " + "))
+    
+    out <- dplyr::mutate(.data = x, 
+                         vars = purrr::map(data, 
+                                           ~ step_grlasso(data = .x, 
+                                                          model = mod_char, 
+                                                          family = family, 
+                                                          grpreg_list = grpreg_list)))
+  }
+  
+  if(any(class(x) == "tetris_analysis")){
+    
+    response <- attr(x, "response")
+    
+    out <- dplyr::mutate(
+      .data = x, 
+      vars = purrr::map2(data, 
+                         vars,
+                         function(y, z){
+                           mod_char <- glue::glue(response, " ~ ", paste0(z, collapse = " + "))
+                           step_grlasso(data = .x, 
+                                        model = mod_char, 
+                                        family = family, 
+                                        grpreg_list = grpreg_list)
+                         }))
+  }
+  
+  if(!is.null(vars))
+    attr(out, "vars") <- vars
+  
+  attr(out, "response") <- response  
+  class(out) <- unique(append("tetris_analysis", class(out)))
+  out
+}

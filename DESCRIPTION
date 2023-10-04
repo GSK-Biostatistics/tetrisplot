@@ -2,7 +2,7 @@ Package: tetrisplot
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("Doug", "Thompson", , "douglas.x.thompson@gsk.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
 License: Apache License (>= 2)
@@ -17,4 +17,5 @@ Imports:
     tidyr (>= 0.8.3),
     forcats (>= 0.5.1),
     patchwork(>= 1.1.1),
+    grplasso (>= 0.4-7),
     grDevices
