@@ -1,19 +1,47 @@
-#' Summarise bootstrapped data
+#' @title Summarise bootstrapped variable selection
 #'
-#' @param x An output of the workflow
+#' @description Alongside a plot, it can also be useful to extract the numbers 
+#'    behind the "tetris plot".
+#' @param x an output of an `analysis_` function of class `tetris_analysis` 
+#' @param type a character input of either `"marginal"` (default) or `"joint"`
 #'
-#' @details 
+#' @details The summary method essentially derives two types of  empirical 
+#'    results associated with the generated bootstrap analyses
 #' @return A `tibble` with appended joint or marginal probabilities
 #' @export
 #' @examples
 #'
-#' datasets::mtcars %>% 
-#'   bootstrap_data(10) %>% 
+#' # This example is illustrative only. It should be expected that categorical 
+#' # and binary variables are coded as factors etc as required. 
+#' datasets::mtcars %>%
+#'   bootstrap_data(50, seed = 1234) %>%
 #'   analyse_univariate(response = "mpg",
-#'                      vars = c("disp", "hp","drat", "wt","qsec"),
-#'                      level = 0.05) %>% 
-#'  summary_joint_selection()                    
-#'
+#'                      vars = c("cyl", "disp", "hp", "drat", "wt",
+#'                               "qsec", "vs", "am", "gear", "carb"),
+#'                      level = 0.01) %>%
+#'   summary()
+
+summary <- function(x, type = "marginal", ...) {
+  UseMethod("summary")
+}
+
+#' @rdname summary
+#' @export
+summary.tetris_analysis <- function(x, type = "marginal", ...){
+  
+  if(!type %in% c("marginal", "joint"))
+    stop("The type of summary must be either 'marginal' or 'joint'")
+  
+  if(type == "marginal"){
+    rslt <- summary_marg_selection(x)
+  }
+  
+  if(type == "joint"){
+    rslt <- summary_joint_selection(x)
+  }
+  return(rslt)
+}
+
 summary_joint_selection <- function(x){
   
   vec <- attr(x, "vars")
@@ -59,8 +87,7 @@ summary_joint_selection <- function(x){
   
 }
 
-#' @export
-summary_marg_seletion <- function(x){
+summary_marg_selection <- function(x){
   
   max_rep <- max(x$boot_rep)
   

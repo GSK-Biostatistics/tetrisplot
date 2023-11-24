@@ -1,8 +1,41 @@
+#' @title Plot of bootstrapped variable selections
+#' @description Produces a "tetris plot" highlighting the uncertainty in the 
+#'    selection of variables chosen under repeat sampling 
+#' @param x an output of an `analysis_` function of class `tetris_analysis` 
+#' @param k a numeric input used to truncate the number of columns in the 
+#'    "tetris plot". Defaults to `0` meaning no restriction
+#' @details In some cases there may be a large number of combinations along 
+#'    the columns of the plot (joint selection probabilities). Such scenarios 
+#'    can occur when there are many joint selection combinations of empirical 
+#'    size `1/times` where `times` are the number of bootstrap draws.  Under 
+#'    those circumstances it might be desired to restrict to a "top set" which 
+#'    ignores those less frequent combinations - effectively "zooming" in on the 
+#'    left-hand-side of the "tetris plot". 
+#' @return A `patchwork` of two `ggplot` outputs
+#' @export
+#' @examples
+#' 
+#' # This example is illustrative only. It should be expected that categorical 
+#' # and binary variables are coded as factors etc as required. 
+#' datasets::mtcars %>%
+#'   bootstrap_data(50, seed = 1234) %>%
+#'   analyse_univariate(response = "mpg",
+#'                      vars = c("cyl", "disp", "hp", "drat", "wt",
+#'                               "qsec", "vs", "am", "gear", "carb"),
+#'                      level = 0.01) %>%
+#'   plot()
 
-tetris_plot <- function(x, k = 0, ...){
+plot <- function(x, ...) {
+  UseMethod("plot")
+}
+
+#' @rdname plot
+#' @export
+
+plot.tetris_analysis <- function(x, k = 0, ...){
   
   y_j <- summary_joint_selection(x)
-  y_m <- summary_marg_seletion(x)
+  y_m <- summary_marg_selection(x)
   ord <- dplyr::arrange(y_m, dplyr::desc(prop)) %>% dplyr::pull(vars)
   obs_select <- attr(y_j, "obs_select")
   max_rep <- attr(y_j, "max_rep")
@@ -82,4 +115,5 @@ tetris_plot <- function(x, k = 0, ...){
   fig_joint + 
     fig_hist + 
     patchwork::plot_layout(ncol = 2, widths = c(2, 0.5))
+  
 }
