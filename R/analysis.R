@@ -11,7 +11,9 @@
 #' @param method a character value of the chosen test to be used. Currently 
 #'    only a Wald chi-squared test is implemented.
 #'
-#' @details 
+#' @details A number of `analysis_` wrappers have been created to illustrate 
+#'    the challenge of final variable selection. These can be combined as 
+#'    desired by the user.
 #' @return A nested `tibble` 
 #' @export
 #' @examples

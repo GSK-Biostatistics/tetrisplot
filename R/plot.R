@@ -112,8 +112,7 @@ plot.tetris_analysis <- function(x, k = 0, ...){
     ggplot2::labs(x = "", y = "", fill = "Proportion (%)")+
     ggplot2::coord_flip()  
   
-  fig_joint + 
-    fig_hist + 
-    patchwork::plot_layout(ncol = 2, widths = c(2, 0.5))
+  patchwork::wrap_plots(fig_joint, fig_hist,
+                        ncol = 2, widths = c(2, 0.5)) 
   
 }

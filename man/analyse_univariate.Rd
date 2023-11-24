@@ -36,6 +36,11 @@ A nested \code{tibble}
 \description{
 Uni-variate variable selection
 }
+\details{
+A number of \code{analysis_} wrappers have been created to illustrate
+the challenge of final variable selection. These can be combined as
+desired by the user.
+}
 \examples{
 
 datasets::mtcars \%>\% 
