@@ -1,10 +1,13 @@
 Package: tetrisplot
-Title: What the Package Does (One Line, Title Case)
+Title: Visualise Variable Selection Instability
 Version: 0.0.0.9000
 Authors@R: 
-    person("Doug", "Thompson", , "douglas.x.thompson@gsk.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    c(person("Doug", "Thompson", ,"douglas.x.thompson@gsk.com", role = c("aut", "cre")),
+    person("Aris", "Perperoglou", ,"aris.x.perperoglou@gsk.com", role = c("csl", "ctb")))
+Description: Introduces the 'Tetris plot', a convenient way to visualise both the marginal and the joint 
+   variable selection probabilities. The package contains a number of wrapper functions for some common 
+   variable selection methods (for example stepwise regression) such that only the selected variables over 
+   a number of bootstrap replicate draws are retained for summary.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -19,3 +22,5 @@ Imports:
     patchwork(>= 1.1.1),
     grplasso (>= 0.4-7),
     grDevices
+Depends: 
+    R (>= 2.10)

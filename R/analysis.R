@@ -17,11 +17,12 @@
 #' @return A nested `tibble` 
 #' @export
 #' @examples
-#'
-#' datasets::mtcars %>% 
-#'   bootstrap_data(10) %>% 
-#'   analyse_univariate(response = "mpg",
-#'                      vars = c("disp", "hp","drat", "wt","qsec"),
+#' data(iswr_stroke)
+#' iswr_stroke %>% 
+#'   bootstrap_data(10, seed = 1234) %>%
+#'   analyse_univariate(response = "dead12",
+#'                      vars = c("Gender", "Age", "Diagnosis", "Coma", 
+#'                               "Diabetes", "MI", "Hypertension"),
 #'                      level = 0.05)
 #'
 
