@@ -60,9 +60,8 @@ boot_lasso <- analyse_grlasso(boot_dat,
                               vars = vec, 
                               family = "binomial",
                               grpreg_list = list(penalty = "grLasso"))
-
-
 ```
+
 A simple call to the associated `plot()` method for each of the outputs 
 ![Figure 2 - Tetris plots from top-to-bottom: univariate, stepwise, and LASSO](man/figures/figure_2.jpg)
 
