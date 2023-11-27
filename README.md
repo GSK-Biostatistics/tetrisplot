@@ -20,15 +20,51 @@ The development version of the `{tetrisplot}` package can be installed from our 
 devtools::install_github("GSK-Biostatistics/tetrisplot")
 ```
 
-## Methods - Inspecting model (in)stability and ways to present this
+## Inspecting model (in)stability and novel ways to present this
 
 In their 2018 paper, Heinze *et al.* outlined how it was possible to empirically estimate marginal and joint variable selection probabilities by repeatedly applying any data-driven selection steps over 100's of re-sampled bootstrap draws (with replacement) from the sample data. The intuition here is that there is value in leveraging the variable selection uncertainty (and therefore model uncertainty) implicit across bootstrap re-samples.
 
-The table in Figure 1 illustrates the bootstrap selection across a set of $p$ candidate covariates, $x_i$ with $i=1, 2, \dots, p-1, p$. The $x_i$ variable has inclusion probability $p_{x_i}$ estimated by averaging a column-wise indicator over the total bootstrap samples, $B$. There exists a set of $2^{p+1}$ unique combinations of selected $x_i$ variables (including an intercept only model). However, given the data, the model, and the selection criteria, not all of these are equally likely. The observed frequency of the unique joint combinations out of the $B$ draws can be derived to expose this.
+The table in Figure 1 illustrates the bootstrap selection across a set of $p$ candidate covariates, $x_i$ with $i=1, 2, \dots, p-1, p$. 
+The $x_i$ variable has inclusion probability $p_{x_i}$ estimated by averaging a column-wise indicator over the total bootstrap samples, $B$. 
+There exists a set of $2^{p+1}$ unique combinations of selected $x_i$ variables (including an intercept only model). However, given the data, the model, and the selection criteria, not all of these are equally likely. The observed frequency of the unique joint combinations out of the $B$ draws can be derived to expose this.
 
 ![Figure 1 - Illustration of calculating joint and marginal selection probabilities](man/figures/figure_1.jpg)
-
+ 
 The 'Tetris plot' therefore aims to bring the bootstrap results to life, acting as a visual representation of the dangers that lurk when reifying the observed final data-driven selection.
+
+## Example
+
+Using the data available in the `{tetrisplot}` package we now illustrate some output visualisations under a few of the available selection methods implemented in the package.
+
+```{r eval=FALSE}
+data(iswr_stroke)
+
+vec <- colnames(iswr_stroke)[colnames(iswr_stroke) != "dead12"]
+
+boot_dat <- bootstrap_data(iswr_stroke, 
+                           times = 100)
+
+boot_univariate <- analyse_univariate(boot_dat,
+                                      response = "dead12",
+                                      vars = vec, 
+                                      family = "binomial", 
+                                      level = 0.05)
+
+boot_backward <- analyse_backward(boot_dat,
+                                  response = "dead12",
+                                  vars = vec, 
+                                  family = "binomial")
+
+boot_lasso <- analyse_grlasso(boot_dat,
+                              response = "dead12",
+                              vars = vec, 
+                              family = "binomial",
+                              grpreg_list = list(penalty = "grLasso"))
+
+
+```
+A simple call to the associated `plot()` method for each of the outputs 
+![Figure 2 - Tetris plots from top-to-bottom: univariate, stepwise, and LASSO](man/figures/figure_2.jpg)
 
 ## References
 
