@@ -1,5 +1,10 @@
-#' Uni-variate variable selection
-#'
+#' @title Uni-variate variable selection
+#' @description A univariate screening of covariates against some outcome. 
+#'    Although discouraged (Moons et al., 2012), univariate selection is not 
+#'    uncommon, particularly as a way to pre-screen many covariates prior to 
+#'    some multivariable fit with possible further feature selection thereafter. 
+#'    The method implemented here is a Wald Chi-squared test under an assumption 
+#'    of asymptotic (multivariate) normality.
 #' @param x An output of the `bootstrap_data` function.
 #' @param response a character argument denoting the outcome
 #' @param vars a character vector denoting the covariates or features to be 
@@ -7,14 +12,20 @@
 #' @param level a numeric scalar denoting a significance threshold to be used  
 #'    against each uni-variate test performed. Default is `0.05`.
 #' @param family the error distribution and link function passed to the `glm()` 
-#'    call inside the `analyse_univariate` function.
+#'    call inside the `analyse_univariate` function. Default is `gaussian`.
 #' @param method a character value of the chosen test to be used. Currently 
-#'    only a Wald chi-squared test is implemented.
+#'    only a Wald Chi-squared test is implemented.
 #'
 #' @details A number of `analysis_` wrappers have been created to illustrate 
 #'    the challenge of final variable selection. These can be combined as 
 #'    desired by the user.
 #' @return A nested `tibble` 
+#' @references 
+#' Moons, K. G. M., Kengne, A. P., Woodward, M., Royston, P., Vergouwe, Y., 
+#' Altman, D. G., & Grobbee, D. E. (2012). Risk prediction models: I. 
+#' Development, internal validation, and assessing the incremental value of a 
+#' new (bio)marker. Heart, 98(9), 683–690. 
+#' https://doi.org/10.1136/heartjnl-2011-301246
 #' @export
 #' @examples
 #' data(iswr_stroke)
