@@ -1,9 +1,11 @@
 #' @title Plot of bootstrapped variable selections
 #' @description Produces a "tetris plot" highlighting the uncertainty in the 
-#'    selection of variables chosen under repeat sampling 
-#' @param x an output of an `analysis_` function of class `tetris_analysis` 
+#'    selection of variables chosen under repeat sampling. 
+#' @param x an output of an `analysis_` function of class `tetris_analysis`.
 #' @param k a numeric input used to truncate the number of columns in the 
-#'    "tetris plot". Defaults to `0` meaning no restriction
+#'    "tetris plot". Defaults to `0` meaning no restriction.
+#' @param ... Currently unused.
+#'
 #' @details In some cases there may be a large number of combinations along 
 #'    the columns of the plot (joint selection probabilities). Such scenarios 
 #'    can occur when there are many joint selection combinations of empirical 
@@ -11,18 +13,16 @@
 #'    those circumstances it might be desired to restrict to a "top set" which 
 #'    ignores those less frequent combinations - effectively "zooming" in on the 
 #'    left-hand-side of the "tetris plot". 
-#' @return A `patchwork` of two `ggplot` outputs
+#' @return A `patchwork` of two `ggplot` outputs.
 #' @export
 #' @examples
-#' 
-#' # This example is illustrative only. It should be expected that categorical 
-#' # and binary variables are coded as factors etc as required. 
-#' datasets::mtcars %>%
-#'   bootstrap_data(50, seed = 1234) %>%
-#'   analyse_univariate(response = "mpg",
-#'                      vars = c("cyl", "disp", "hp", "drat", "wt",
-#'                               "qsec", "vs", "am", "gear", "carb"),
-#'                      level = 0.01) %>%
+#' data(iswr_stroke)
+#' iswr_stroke %>%
+#'   bootstrap_data(10, seed = 1234) %>%
+#'   analyse_univariate(response = "dead12",
+#'                      vars = c("Gender", "Age", "Diagnosis", "Coma",
+#'                               "Diabetes", "MI", "Hypertension"),
+#'                      family = "binomial") %>% 
 #'   plot()
 
 plot <- function(x, ...) {
