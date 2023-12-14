@@ -4,21 +4,20 @@
 #'    behind the "tetris plot".
 #' @param x an output of an `analysis_` function of class `tetris_analysis` 
 #' @param type a character input of either `"marginal"` (default) or `"joint"`
+#' @param ... Currently unused.
 #'
 #' @details The summary method essentially derives two types of  empirical 
 #'    results associated with the generated bootstrap analyses
 #' @return A `tibble` with appended joint or marginal probabilities
 #' @export
 #' @examples
-#'
-#' # This example is illustrative only. It should be expected that categorical 
-#' # and binary variables are coded as factors etc as required. 
-#' datasets::mtcars %>%
-#'   bootstrap_data(50, seed = 1234) %>%
-#'   analyse_univariate(response = "mpg",
-#'                      vars = c("cyl", "disp", "hp", "drat", "wt",
-#'                               "qsec", "vs", "am", "gear", "carb"),
-#'                      level = 0.01) %>%
+#' data(iswr_stroke)
+#' iswr_stroke %>%
+#'   bootstrap_data(10, seed = 1234) %>%
+#'   analyse_univariate(response = "dead12",
+#'                      vars = c("Gender", "Age", "Diagnosis", "Coma",
+#'                               "Diabetes", "MI", "Hypertension"),
+#'                      family = "binomial") %>% 
 #'   summary()
 
 summary <- function(x, type = "marginal", ...) {

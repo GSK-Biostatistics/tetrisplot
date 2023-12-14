@@ -2,9 +2,9 @@
 #' @title Uni-variate variable selection
 #' @description A univariate screening of covariates against some outcome. 
 #' @param x An output of the `bootstrap_data` function.
-#' @param response a character argument denoting the outcome
+#' @param response a character argument denoting the outcome.
 #' @param vars a character vector denoting the covariates or features to be 
-#'    screened
+#'    screened.
 #' @param level a numeric scalar denoting a significance threshold to be used  
 #'    against each uni-variate test performed. Default is `0.05`.
 #' @param family the error distribution and link function passed to the `glm()` 
@@ -21,7 +21,7 @@
 #'    feature selection thereafter. The present function is a simple wrapper for 
 #'    the `aod::wald.test()` function, an implementation of the Wald Chi-squared 
 #'    test under an assumption of asymptotic (multivariate) normality.
-#' @return A nested `tibble` 
+#' @return A nested `tibble`. 
 #' @references 
 #' Moons, K. G. M., Kengne, A. P., Woodward, M., Royston, P., Vergouwe, Y., 
 #'    Altman, D. G., & Grobbee, D. E. (2012). Risk prediction models: I. 
@@ -36,6 +36,7 @@
 #'   analyse_univariate(response = "dead12",
 #'                      vars = c("Gender", "Age", "Diagnosis", "Coma", 
 #'                               "Diabetes", "MI", "Hypertension"),
+#'                      family = "binomial",         
 #'                      level = 0.05)
 #'
 analyse_univariate <- function(x, 
@@ -104,11 +105,11 @@ analyse_univariate <- function(x,
 #'    criterion for stepping down (i.e., from a full model) through the 
 #'    candidate set of variables.     
 #' @param x An output of the `bootstrap_data` function.
-#' @param response a character argument denoting the outcome
+#' @param response a character argument denoting the outcome.
 #' @param vars a character vector denoting the covariates or features to be 
-#'    screened
+#'    screened.
 #' @param family the error distribution and link function passed to the `glm()` 
-#'    call inside the `analyse_univariate` function. Default is `gaussian`.
+#'    call inside the `analyse_backward` function. Default is `gaussian`.
 #' @param k as per the `stats::step` definition: "the multiple of the number of 
 #'    degrees of freedom used for the penalty". 
 #'    
@@ -122,20 +123,21 @@ analyse_univariate <- function(x,
 #'    this method is still common practice in many clinical prediction modelling 
 #'    publications and is thus worth including for illustrating selection 
 #'    instability. 
-#' @return A nested `tibble` 
+#' @return A nested `tibble`. 
 #' @references 
 #' Harrell, F. E. (2015). Regression Modeling Strategies: With Applications to 
 #'    Linear Models, Logistic and Ordinal Regression, and Survival Analysis. 
 #'    Springer International Publishing. 
 #'    https://books.google.co.uk/books?id=sQ90rgEACAAJ
 #' @export
-#' @example 
+#' @examples 
 #' data(iswr_stroke)
 #' iswr_stroke %>%
 #'   bootstrap_data(10, seed = 1234) %>%
 #'   analyse_backward(response = "dead12",
 #'                    vars = c("Gender", "Age", "Diagnosis", "Coma",
-#'                             "Diabetes", "MI", "Hypertension"))
+#'                             "Diabetes", "MI", "Hypertension"),
+#'                    family = "binomial")
 analyse_backward <- function(x, 
                              response = NULL, 
                              vars = NULL, 
@@ -181,7 +183,36 @@ analyse_backward <- function(x,
 }
 
 #-------------------------------------------------------------------------------
+#' @title Grouped LASSO penalisation for shrinkage with selection
+#' @description An application of Grouped LASSO penalisation. Whilst group LASSO 
+#'    may be used more generally to pre-specify arbitrary groupings of 
+#'    variables, it is used here to ensure selection of entire categorical 
+#'    variables with more than one dummy level.
+#' @param x An output of the `bootstrap_data` function.
+#' @param response a character argument denoting the outcome.
+#' @param vars a character vector denoting the covariates or features to be 
+#'    screened.
+#' @param family the error distribution and link function passed to the 
+#'    `grpreg()` call inside the `analyse_grlasso` function. Currently only 
+#'    `gaussian`, `binomial` and `poisson` are supported in the `grpreg` package 
+#'    with the present default set as `"gaussian"`.
+#' @param grpreg_list a `list` passed to the `grpreg::grpreg` call. See 
+#'    `?grpreg::grpreg` for more details.
+#'
+#' @details The present function is a simple wrapper for the `grpreg::grpreg()`
+#'    function. Grouped LASSO extends the standard LASSO penalty through the 
+#'    introduction of a grouping index. This therefore applies variable 
+#'    selection at the group level.
 #' @export
+#' @examples 
+#' data(iswr_stroke)
+#' iswr_stroke %>%
+#'   bootstrap_data(10, seed = 1234) %>%
+#'   analyse_grlasso(response = "dead12",
+#'                   vars = c("Gender", "Age", "Diagnosis", "Coma",
+#'                            "Diabetes", "MI", "Hypertension"),
+#'                   family = "binomial",
+#'                   grpreg_list = list(penalty = "grLasso"))
 analyse_grlasso <- function(x, 
                             response = NULL, 
                             vars = NULL, 

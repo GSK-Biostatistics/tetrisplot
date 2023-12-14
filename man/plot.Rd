@@ -10,17 +10,19 @@ plot(x, ...)
 \method{plot}{tetris_analysis}(x, k = 0, ...)
 }
 \arguments{
-\item{x}{an output of an \code{analysis_} function of class \code{tetris_analysis}}
+\item{x}{an output of an \code{analysis_} function of class \code{tetris_analysis}.}
+
+\item{...}{Currently unused.}
 
 \item{k}{a numeric input used to truncate the number of columns in the
-"tetris plot". Defaults to \code{0} meaning no restriction}
+"tetris plot". Defaults to \code{0} meaning no restriction.}
 }
 \value{
-A \code{patchwork} of two \code{ggplot} outputs
+A \code{patchwork} of two \code{ggplot} outputs.
 }
 \description{
 Produces a "tetris plot" highlighting the uncertainty in the
-selection of variables chosen under repeat sampling
+selection of variables chosen under repeat sampling.
 }
 \details{
 In some cases there may be a large number of combinations along
@@ -32,14 +34,12 @@ ignores those less frequent combinations - effectively "zooming" in on the
 left-hand-side of the "tetris plot".
 }
 \examples{
-
-# This example is illustrative only. It should be expected that categorical 
-# and binary variables are coded as factors etc as required. 
-datasets::mtcars \%>\%
-  bootstrap_data(50, seed = 1234) \%>\%
-  analyse_univariate(response = "mpg",
-                     vars = c("cyl", "disp", "hp", "drat", "wt",
-                              "qsec", "vs", "am", "gear", "carb"),
-                     level = 0.01) \%>\%
+data(iswr_stroke)
+iswr_stroke \%>\%
+  bootstrap_data(10, seed = 1234) \%>\%
+  analyse_univariate(response = "dead12",
+                     vars = c("Gender", "Age", "Diagnosis", "Coma",
+                              "Diabetes", "MI", "Hypertension"),
+                     family = "binomial") \%>\% 
   plot()
 }
