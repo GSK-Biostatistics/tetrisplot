@@ -2,7 +2,7 @@
 % Please edit documentation in R/bootstrap.R
 \name{bootstrap_data}
 \alias{bootstrap_data}
-\title{Bootstrap a data set with replacement}
+\title{Bootstrapped data sets with replacement}
 \usage{
 bootstrap_data(data, times, include_original = FALSE, seed = NULL, ...)
 }
@@ -10,24 +10,35 @@ bootstrap_data(data, times, include_original = FALSE, seed = NULL, ...)
 \item{data}{A data frame from which to generate bootstrap samples.}
 
 \item{times}{A numeric input specifying how many bootstrap draws are to be
-made on \code{data}}
+generated from \code{data}.}
 
 \item{include_original}{A logical input. If \code{TRUE} the returned output will
-contain a row with the original \code{data}. See details. Default is \code{FALSE}.}
+contain a row with the original \code{data}. Default is \code{FALSE} (see details).}
 
 \item{seed}{A numeric input specifying the seed to be used. Default is \code{NULL}}
 
-\item{...}{These dots are for future extensions and must be empty}
+\item{...}{These dots are for future extensions and must be empty.}
 }
 \value{
 A nested \code{tibble}
 }
 \description{
-Bootstrap a data set with replacement
+For a user provided data set a number of bootstrapped samples
+are generated with replacement.
+}
+\details{
+Note that by design each bootstrapped sample is of the same size as
+the original data set. The function generates a simple random sample with
+replacement along the number of rows in the provided data. The suitability
+of making any inference from the bootstrapped samples depend on a variety
+of points (eg. size of original N, number of boot strap draws generated)
+which are left to the user to decide if they are warranted. The
+\code{include_original} argument can be useful to obtain apparent selection
+from a given variable selection method.
 }
 \examples{
 
-test_dat <- data.frame(a = 1:10, b = rnorm(10))
-bootstrap_data(test_dat, times = 5) 
+test_dat <- data.frame(a = 1:5, b = rnorm(5))
+bootstrap_data(test_dat, times = 2, seed = 123) 
 
 }

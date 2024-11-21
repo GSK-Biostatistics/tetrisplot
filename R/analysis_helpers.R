@@ -40,3 +40,36 @@ step_backward <- function(data, model, family, k){
   rslt <- attr(fit_step$terms, "term.labels")
   return(rslt)
 }
+
+step_grlasso <- function(data, model, family, grpreg_list = list(NULL)){
+  
+  if(!family %in% c("gaussian", "binomial", "poisson"))
+    stop("grpreg::grpreg handles 'gaussian', 'binomial' and 'poisson' only")
+  
+  model <- as.formula(model)
+  y_nam <- formula.tools::lhs.vars(model)
+  x_nam <- formula.tools::rhs.vars(model)
+  mod_mat <- stats::model.matrix(object = model, data = data)
+  
+  y <- data[[y_nam]]
+  X <- mod_mat[,-1]
+  grp_num <- attr(mod_mat, "assign")[-1]
+  grp <- as.character(factor(grp_num, labels = x_nam))
+
+  if(family == "binomial" & length(unique(y)) == 2){
+    y <- ifelse(as.numeric(as.factor(y))-1 == 1, 1, 0)
+  }
+  
+  single_cv_lambda <- grpreg::cv.grpreg(y = y, 
+                                        X = X, 
+                                        group = grp)
+  fit <- purrr::exec(grpreg::grpreg,
+                     X = X, 
+                     y = y,
+                     group = grp,
+                     lambda = single_cv_lambda$lambda.min,
+                     !!!grpreg_list)
+  
+  rslt <- unique(grp[which(as.numeric(fit$beta)[-1] != 0)])
+  return(rslt)
+}
